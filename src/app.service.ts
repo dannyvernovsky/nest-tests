@@ -15,7 +15,8 @@ export class AppService {
       return this.mapNASAResponseToAppResponse(asteroidsResult.data);
       
     } catch (error) {
-      console.log(error);
+      console.log('error had been thrown');
+      throw error;
     }
   }
 
@@ -29,7 +30,7 @@ export class AppService {
         closest_approach_date: nasaAsteroid.close_approach_data[0]?.close_approach_date,
         is_dangerous: nasaAsteroid.is_potentially_hazardous_asteroid,
         name: nasaAsteroid.name,
-        siameter: nasaAsteroid.estimated_diameter.kilometers.estimated_diameter_max
+        diameter: nasaAsteroid.estimated_diameter.kilometers.estimated_diameter_max
       }  
 
       asteroids.push(asteroid);
@@ -45,7 +46,7 @@ export interface Asteroid{
   periapsis:number;
   is_dangerous: boolean;
   name:string;
-  siameter:number;
+  diameter:number;
   closest_approach_date:string;
 }
 

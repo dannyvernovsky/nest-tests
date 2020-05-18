@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { AppService } from './app.service';
 import { AxiosStatic, AxiosResponse } from 'axios';
@@ -17,34 +18,34 @@ describe('AppService tests', () => {
     appController = new AppController(new AppService(axiosMock as AxiosStatic));
   });
 
-  it('kushkush', ()=>{
-    appController.getAsteroids()
-  })
-
   it('should map object correctly', async () => {
     // given
     const mockResponse: Partial<AxiosResponse<unknown>> = {
       data: NASA_RAW_RESPONSE
-    }
+    };
 
-    const getMock = axiosMock.get as jest.Mock;
-    getMock.mockResolvedValueOnce(mockResponse);
-
-    // (axiosMock.get as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (axiosMock.get as jest.Mock).mockResolvedValueOnce(mockResponse);
 
     // when
     const result = await appController.getAsteroids();
 
     // then
-    await expect(appService.getAsteroids()).rejects.toThrow();
-    expect(result).toBeDefined();
-  })
+    expect(result).toEqual([{
+      apoapsis: '3.613831900092161',
+      periapsis: '1.139371049187003',
+      closest_approach_date: '1945-06-07',
+      is_dangerous: false,
+      name: '21277 (1996 TO5)',
+      diameter: 3.5812940302
+    }]);
+  });
 
+  it('should reject and throw exeption', async () => {
+    // when
+    (axiosMock.get as jest.Mock).mockRejectedValueOnce(new Error('some error'));
 
-  it('', () => {
-    // given
-
-    // when + then
+    // then 
+    await expect(appService.getAsteroids()).rejects.toThrowError('some error')
   })
 });
 
@@ -141,21 +142,4 @@ const NASA_RAW_RESPONSE = {
       "is_sentry_object": false
     },
   ]
-}
-
-
-
-
-
-function foo() {
-  throw new Error();
-}
-
-
-function foo2() {
-  try {
-  const t = await foo();
-  } catch (error){
-
-  }
 }
